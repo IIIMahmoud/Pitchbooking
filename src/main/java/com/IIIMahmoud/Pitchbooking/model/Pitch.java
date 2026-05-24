@@ -34,7 +34,7 @@ public class Pitch {
     @Column(name="pitch_type", nullable=false, length=50)
     private String pitchType;
 
-    @NotBlank(message = "U must enter pitch type")
+    @NotBlank(message = "U must enter pitch location") // تم تعديل الرسالة هنا
     @Column(nullable=false, length=100)
     private String location;
 
@@ -42,8 +42,18 @@ public class Pitch {
     @Column(nullable=false)
     private String picture;
 
-    @Column( name="time_creation",nullable=false,updatable=false)
-    private Instant timeCreation= Instant.now();
+    // ضفنا الحقل ده لأنه كان مبعوث في الـ JSON ومش موجود في الكود 👇
+    @NotNull(message = "u must enter price per hour")
+    @Column(name="price_per_hour", nullable=false)
+    private Double pricePerHour;
 
+    @Column(name="time_creation", nullable=false, updatable=false)
+    private Instant timeCreation;
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.timeCreation == null) {
+            this.timeCreation = Instant.now();
+        }
+    }
 }
-

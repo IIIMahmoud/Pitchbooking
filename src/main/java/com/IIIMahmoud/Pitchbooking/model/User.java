@@ -1,49 +1,44 @@
 package com.IIIMahmoud.Pitchbooking.model;
 
-import com.IIIMahmoud.Pitchbooking.model.Enum.UserRole;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import lombok.*;
-
-import java.time.Instant;
-import java.time.LocalDate;
+import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Data // بتعمل الـ getters والـ setters والـ toString تلقائياً بفضل Lombok
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String name;
 
-    @Email
-    @NotBlank
-    @Column(nullable = false, unique = true, length = 150)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String password;
 
-    @NotBlank
-    @Column(name = "phone_number", nullable = false, unique = true, length = 11)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
+    private String role;
+
+    @Column(nullable = false)
     private String status = "ACTIVE";
 
-    @Column(name = "user_time_creation", nullable = false, updatable = false)
-    private Instant timeCreation = Instant.now();
+    // الحقل الجديد اللي مسبب المشكلة 👇
+    @Column(name = "user_time_creation", nullable = false)
+    private LocalDateTime userTimeCreation;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private UserRole role;
+    @PrePersist
+    protected void onCreate() {
+        if (this.userTimeCreation == null) {
+            this.userTimeCreation = LocalDateTime.now();
+        }
+    }
 }

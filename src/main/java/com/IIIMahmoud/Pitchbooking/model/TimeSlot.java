@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Table(name="time_slot")
+@Table(name="timeslots")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,6 +33,8 @@ public class TimeSlot {
     @Column(name="end_time", nullable=false)
     private LocalTime end_time;
 
+    @Column(name = "is_booked", nullable = false)
+    private boolean isBooked = false;
 
 
 }
